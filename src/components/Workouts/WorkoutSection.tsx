@@ -13,16 +13,14 @@ const WorkoutSection = async () => {
   const workouts = await WorkoutData();
 
   return (
-    <section className="px-5 py-10">
-
-     
+    <section id="library" className="px-5 py-10">
       <div className="mb-8">
         <h2 className="text-white text-3xl md:text-4xl font-bold mt-2">
           THE LIBRARY
         </h2>
 
         <p className="text-[#9CA3AF] mt-3">
-          Find the right workout and start training.
+          Twelve lifts covering every major muscle group.
         </p>
       </div>
 
@@ -31,7 +29,6 @@ const WorkoutSection = async () => {
           return <WorkoutCard key={workout.id} workout={workout} />;
         })}
       </div>
-
     </section>
   );
 };
