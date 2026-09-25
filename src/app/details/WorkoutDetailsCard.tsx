@@ -235,7 +235,7 @@ const WorkoutDetailCard = ({
 
             {/* ADD TO PLAN */}
             <button
-              disabled={alreadyAdded}
+              disabled={alreadyAdded || (!alreadyAdded && plan.length >= 5)}
               onClick={() => {
                 if (alreadyAdded) {
                   toast.info(
@@ -244,15 +244,25 @@ const WorkoutDetailCard = ({
                   return;
                 }
 
-                addToPlan(workout);
+                if (plan.length >= 5) {
+                  toast.warning(
+                    "Daily limit reached! Cap of 5 lifts for today."
+                  );
+                  return;
+                }
 
-                toast.success(
-                  "Workout added to your plan!"
-                );
+                const added = addToPlan(workout);
+                if (added) {
+                  toast.success(
+                    "Workout added to your plan!"
+                  );
+                }
               }}
               className={`btn border-none font-bold rounded-md px-6 transition-colors duration-200 ${
                 alreadyAdded
                   ? "bg-[#2A2E38] text-[#C2F800] cursor-not-allowed"
+                  : plan.length >= 5
+                  ? "bg-[#2A2E38] text-gray-400 cursor-not-allowed"
                   : "bg-[#C2F800] hover:bg-[#A8D600] text-black"
               }`}
             >
@@ -263,6 +273,8 @@ const WorkoutDetailCard = ({
 
               {alreadyAdded
                 ? "Added to plan"
+                : plan.length >= 5
+                ? "Plan Full (5/5)"
                 : "Add to plan"}
             </button>
 
@@ -277,11 +289,12 @@ const WorkoutDetailCard = ({
                   return;
                 }
 
-                saveForLater(workout);
-
-                toast.success(
-                  "Workout saved for later!"
-                );
+                const savedStatus = saveForLater(workout);
+                if (savedStatus) {
+                  toast.success(
+                    "Workout saved for later!"
+                  );
+                }
               }}
               className={`btn font-bold rounded-md px-6 transition-colors duration-200 ${
                 alreadySaved
