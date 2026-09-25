@@ -27,7 +27,7 @@ const MyPlan = () => {
 
     const [tab, setTab] = useState<"today" | "saved">("today");
 
-    // কোন tab active তার উপর list change হবে
+    
     const activeList = tab === "today" ? plan : saved;
 
     // Total minutes

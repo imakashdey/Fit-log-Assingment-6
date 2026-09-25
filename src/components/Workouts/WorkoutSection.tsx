@@ -3,7 +3,7 @@ import WorkoutCard from "./workoutsCard";
 import { ITypeFit } from "../../types/typeFit";
 
 const WorkoutData = async () => {
-  const res = await fetch("http://localhost:3000/workouts.json");
+  const res = await fetch("https://api.abcz.workers.dev/api/fitlog");
   const data: ITypeFit[] = await res.json();
 
   return data;

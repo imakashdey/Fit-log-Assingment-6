@@ -13,7 +13,7 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
   const { id } = await params;
 
  
-  const res = await fetch("http://localhost:3000/workouts.json");
+ const res = await fetch("https://api.abcz.workers.dev/api/fitlog");
 
   const workouts: ITypeFit[] = await res.json();
 
