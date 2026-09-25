@@ -9,32 +9,44 @@ interface DetailsPageProps {
   }>;
 }
 
+const getSingleWorkout = async (id: string): Promise<ITypeFit | null> => {
+  try {
+    const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.id) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching single workout:", err);
+  }
+
+  // Fallback to list search if needed
+  try {
+    const allRes = await fetch("https://api.abcz.workers.dev/api/fitlog");
+    if (allRes.ok) {
+      const allData: ITypeFit[] = await allRes.json();
+      const match = allData.find((item) => item.id === Number(id));
+      if (match) return match;
+    }
+  } catch (err) {
+    console.error("Fallback fetch error:", err);
+  }
+
+  return null;
+};
+
 const DetailsPage = async ({ params }: DetailsPageProps) => {
   const { id } = await params;
+  const workout = await getSingleWorkout(id);
 
- 
- const res = await fetch("https://api.abcz.workers.dev/api/fitlog");
-
-  const workouts: ITypeFit[] = await res.json();
-
-  
-  const workout = workouts.find(
-    (item) => item.id === Number(id)
-  );
-
-  
   if (!workout) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h2 className="text-white text-3xl font-bold">
-          Workout Not Found
-        </h2>
-      </main>
-    );
+    notFound();
   }
 
   return (
-    <main className="px-5 py-10">
+    <main className="px-5 py-10 max-w-7xl mx-auto">
       <WorkoutDetailCard workout={workout} />
     </main>
   );
