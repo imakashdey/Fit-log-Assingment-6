@@ -3,15 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
+import { usePathname } from "next/navigation";
 import Logo from "../../assests/logo.png";
 import { WorkoutContext } from "../../context/WorkoutProvider";
 
 const Navbar = () => {
   const { plan, saved } = useContext(WorkoutContext);
+  const pathname = usePathname();
+
+  const isWorkoutsActive = pathname === "/" || pathname.startsWith("/details");
+  const isMyPlanActive = pathname === "/my-plan";
 
   return (
-    <nav>
-      <div className="navbar px-4">
+    <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-md">
+      <div className="navbar px-4  ">
 
         {/* Left Side */}
         <div className="navbar-start">
@@ -21,7 +26,7 @@ const Navbar = () => {
             <div
               tabIndex={0}
               role="button"
-              className="btn btn-ghost hover:bg-transparent lg:hidden"
+              className="btn btn-ghost hover:bg-transparent lg:hidden text-white"
             >
               <svg
                 aria-label="Menu"
@@ -43,14 +48,24 @@ const Navbar = () => {
             {/* Mobile Dropdown */}
             <ul
               tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-[#15171D] border border-[#292D35] rounded-box z-50 mt-3 w-52 p-2 shadow text-white"
             >
               <li>
-                <Link href="/">Workouts</Link>
+                <Link
+                  href="/"
+                  className={isWorkoutsActive ? "bg-[#1A2312] text-[#C2F800] font-bold" : ""}
+                >
+                  Workouts
+                </Link>
               </li>
 
               <li>
-                <Link href="/my-plan">My Plan</Link>
+                <Link
+                  href="/my-plan"
+                  className={isMyPlanActive ? "bg-[#1A2312] text-[#C2F800] font-bold" : ""}
+                >
+                  My Plan
+                </Link>
               </li>
             </ul>
           </div>
@@ -67,7 +82,7 @@ const Navbar = () => {
               height={40}
             />
 
-            <span className="text-[18px] md:text-2xl font-bold">
+            <span className="text-[18px] md:text-2xl font-bold text-white tracking-tight">
               FITLOG
             </span>
           </Link>
@@ -75,21 +90,29 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="navbar-center hidden lg:flex font-semibold">
-          <ul className="menu menu-horizontal px-1 text-[12px] gap-1">
+          <ul className="menu menu-horizontal px-1 text-[13px] gap-2">
 
-            <li className="rounded-full">
+            <li>
               <Link
                 href="/"
-                className="text-white hover:bg-[#1A2312] hover:text-[#C2F800] rounded-3xl"
+                className={`px-4 py-1.5 rounded-full transition ${
+                  isWorkoutsActive
+                    ? "bg-[#1A2312] text-[#C2F800] font-bold"
+                    : "text-white/80 hover:bg-[#1A2312] hover:text-[#C2F800]"
+                }`}
               >
                 Workouts
               </Link>
             </li>
 
-            <li className="rounded-full">
+            <li>
               <Link
-               href="/my-plan"
-                className="text-white hover:bg-[#1A2312] hover:text-[#C2F800] rounded-3xl"
+                href="/my-plan"
+                className={`px-4 py-1.5 rounded-full transition ${
+                  isMyPlanActive
+                    ? "bg-[#1A2312] text-[#C2F800] font-bold"
+                    : "text-white/80 hover:bg-[#1A2312] hover:text-[#C2F800]"
+                }`}
               >
                 My Plan
               </Link>
@@ -98,30 +121,32 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Right Side - Plan & Saved Count */}
-        <div className="navbar-end gap-4 text-sm font-medium">
+        {/* Right Side - Plan & Saved Count Badges */}
+        <div className="navbar-end gap-2.5 text-xs font-semibold">
 
-          {/* Plan */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-white/70">
-              Plan
-            </span>
-
-            <span className="bg-[#C2F800] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+          {/* Plan Badge - Filled pill with accent background */}
+          <Link
+            href="/my-plan"
+            className="flex items-center gap-1.5 bg-[#C2F800] text-black px-3 py-1.5 rounded-full hover:brightness-95 transition"
+            title="View Today's Plan"
+          >
+            <span>Plan</span>
+            <span className="bg-black text-[#C2F800] text-[11px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
               {plan.length}
             </span>
-          </div>
+          </Link>
 
-          {/* Saved */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-white/70">
-              Saved
-            </span>
-
-            <span className="bg-white/10 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+          {/* Saved Badge - Pill with outline/border only */}
+          <Link
+            href="/my-plan"
+            className="flex items-center gap-1.5 border border-[#292D35] text-white hover:border-[#C2F800] hover:text-[#C2F800] px-3 py-1.5 rounded-full transition"
+            title="View Saved Workouts"
+          >
+            <span className="text-white/80">Saved</span>
+            <span className="bg-[#292D35] text-white text-[11px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
               {saved.length}
             </span>
-          </div>
+          </Link>
 
         </div>
       </div>
